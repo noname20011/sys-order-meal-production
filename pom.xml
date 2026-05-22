@@ -8,7 +8,7 @@
 		<version>3.5.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>system_order_meal_api</groupId>
+	<groupId>sys_order_meal_healthy</groupId>
 	<artifactId>sys-order-meal</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
