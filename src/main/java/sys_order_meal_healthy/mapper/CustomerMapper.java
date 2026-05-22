@@ -1,0 +1,12 @@
+package sys_order_meal_healthy.mapper;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import sys_order_meal_healthy.domain.entity.Customer;
+import sys_order_meal_healthy.dto.customer.CustomerRequestDTO;
+import sys_order_meal_healthy.dto.customer.CustomerResponseDTO;
+import sys_order_meal_healthy.helper.base.mapper.BaseMapper;
+
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+public interface CustomerMapper extends BaseMapper<Customer, CustomerRequestDTO, CustomerResponseDTO> {
+}
