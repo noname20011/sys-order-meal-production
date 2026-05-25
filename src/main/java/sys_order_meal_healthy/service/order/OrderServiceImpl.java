@@ -47,20 +47,21 @@ public class OrderServiceImpl implements OrderService {
         Customer customer = customerService.addUserEntity(customerRequestDTO);
         Order orderRaw = orderMapper.mapToEntity(dto);
 
-        // Create order id
-        String customOrderId = "DH" + System.currentTimeMillis();
-        orderRaw.setId(customOrderId);
-        orderRaw.setCustomer(customer);
-        orderRepository.save(orderRaw);
-        log.info("Order Added Successfully: {}", orderRaw);
-
-
         //1. Up photo len Cloudinary
         String proofUrlOrMethod = "COD";
 
         if(dto.getPaymentProofFile() != null){
             proofUrlOrMethod = cloudinaryService.uploadPhoto(dto.getPaymentProofFile());
         }
+
+        // Create order id
+        String customOrderId = "DH" + System.currentTimeMillis();
+        orderRaw.setId(customOrderId);
+        orderRaw.setCustomer(customer);
+        orderRaw.setPaymentProofUrl(proofUrlOrMethod);
+        orderRepository.save(orderRaw);
+        log.info("Order Added Successfully: {}", orderRaw);
+
         dto.setPaymentProofUrl(proofUrlOrMethod);
         // 2. Ghi lên Google Sheet (Chạy bất đồng bộ - Async)
         // Bắn Event thay vì gọi trực tiếp Async

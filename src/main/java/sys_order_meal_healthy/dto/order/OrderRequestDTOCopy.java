@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderRequestDTO implements Serializable {
+public class OrderRequestDTOCopy implements Serializable {
 
     @Pattern(
             regexp = "^(0|\\+84)[3|5|7|9][0-9]{8}$",
@@ -57,11 +57,5 @@ public class OrderRequestDTO implements Serializable {
 
     @NotBlank(message = "Field timeReceive order must be not blank!")
     private String timeReceive;
-
-    @NotBlank(message = "Field start date must be not blank!")
-    private String startDate;
-
-    @NotBlank(message = "Field end date must be not blank!")
-    private String endDate;
 
 }

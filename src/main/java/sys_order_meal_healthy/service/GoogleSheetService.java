@@ -53,7 +53,9 @@ public class GoogleSheetService {
                 formData.getNote(),            // Cột H: Ghi chú (Kiêng ăn..)
                 formData.getShipFee(),          // Cột I: Phí ship (1 ngày)
                 formData.getTotalPrice(),      // Cột J: Tổng tiền
-                formData.getPaymentProofUrl()               // Cột K: Link Ảnh CK (Hoặc hiển thị chữ "COD")
+                formData.getStartDate(),       // Cột K: Ngày bắt đầu
+                formData.getEndDate(),         // Cột L: Ngày kết thúc
+                formData.getPaymentProofUrl()  // Cột M: Link Ảnh CK (Hoặc hiển thị chữ "COD")
         );
 
         ValueRange appendBody = new ValueRange().setValues(Collections.singletonList(sheetRowData));
