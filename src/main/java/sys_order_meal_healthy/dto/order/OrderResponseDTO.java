@@ -1,9 +1,6 @@
 package sys_order_meal_healthy.dto.order;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import sys_order_meal_healthy.domain.constants.PaidEnum;
 import sys_order_meal_healthy.domain.entity.Customer;
 
@@ -15,6 +12,7 @@ import java.util.UUID;
 @Builder
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class OrderResponseDTO implements Serializable {
 
     private String id;
@@ -25,7 +23,6 @@ public class OrderResponseDTO implements Serializable {
     private String paymentProofUrl;
     private PaidEnum paidBy;
     private Double shipFee;
-
     private String metadataOrder;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

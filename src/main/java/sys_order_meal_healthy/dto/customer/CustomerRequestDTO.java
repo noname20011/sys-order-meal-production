@@ -21,12 +21,9 @@ public class CustomerRequestDTO implements Serializable {
     )
     private String phoneNumber;
 
-    @NotBlank(message = "Field FullName must be not blank!")
     private String fullName;
 
-    @NotBlank(message = "Field Address must be not blank!")
-    private String address;
-
-    @NotBlank(message = "Field District must be not blank!")
     private String district;
+
+    private String address;
 }

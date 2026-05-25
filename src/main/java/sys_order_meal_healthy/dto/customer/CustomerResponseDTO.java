@@ -1,9 +1,6 @@
 package sys_order_meal_healthy.dto.customer;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,12 +10,12 @@ import java.util.UUID;
 @Builder
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class CustomerResponseDTO implements Serializable {
 
-    private UUID id;
     private String fullName;
     private String phoneNumber;
-    private String detailAddress;
+    private String address;
     private String district;
     private Integer totalOrders;
     private LocalDateTime createdAt;

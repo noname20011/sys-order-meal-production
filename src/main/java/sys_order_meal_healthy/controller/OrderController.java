@@ -14,7 +14,7 @@ import sys_order_meal_healthy.service.customer.CustomerService;
 import sys_order_meal_healthy.service.order.OrderService;
 
 @RestController
-@RequestMapping("/order/")
+@RequestMapping("/api/v1/order/")
 @RequiredArgsConstructor
 public class OrderController {
 

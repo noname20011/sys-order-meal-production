@@ -19,5 +19,7 @@ public interface OrderMapper extends BaseMapper<Order, OrderRequestDTO, OrderRes
     @Override
     @Mapping(target = "phoneNumber", source = "orderResult.customer.phoneNumber")
     @Mapping(target = "fullName", source = "orderResult.customer.fullName")
+    @Mapping(target = "createdAt", source = "createdAt")
+    @Mapping(target = "updatedAt", source = "updatedAt")
     OrderResponseDTO mapToResponseDto(Order orderResult);
 }
