@@ -20,7 +20,7 @@ import java.io.Serializable;
 public class OrderRequestDTO implements Serializable {
 
     @Pattern(
-            regexp = "^(0|\\+84)[3|5|7|9][0-9]{8}$",
+            regexp = "^(0|\\+84)[3|5|7|8|9][0-9]{8}$",
             message = "PhoneNumber not valid!"
     )
     private String phoneNumber;
@@ -49,7 +49,6 @@ public class OrderRequestDTO implements Serializable {
     @NotBlank(message = "Field Address must be not blank!")
     private String address;
 
-    @NotBlank(message = "Field note order must be not blank!")
     private String note;
 
     @NotNull(message = "Field shipFee order must be not blank!")
