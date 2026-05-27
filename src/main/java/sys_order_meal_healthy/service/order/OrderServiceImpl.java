@@ -10,13 +10,14 @@ import sys_order_meal_healthy.domain.entity.Order;
 import sys_order_meal_healthy.dto.customer.CustomerRequestDTO;
 import sys_order_meal_healthy.dto.order.OrderRequestDTO;
 import sys_order_meal_healthy.dto.order.OrderResponseDTO;
+import sys_order_meal_healthy.exception.BusinessException;
 import sys_order_meal_healthy.listener.SaveOrderEvent;
 import sys_order_meal_healthy.mapper.OrderMapper;
 import sys_order_meal_healthy.repository.OrderRepository;
 import sys_order_meal_healthy.service.cloudinary.CloudinaryService;
 import sys_order_meal_healthy.service.customer.CustomerService;
 
-import java.time.LocalDate;
+import java.time.*;
 import java.util.List;
 
 @Service
@@ -30,6 +31,27 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
     private final ApplicationEventPublisher eventPublisher;
 
+    private static final LocalTime OPEN_TIME = LocalTime.of(7, 0);
+    private static final LocalTime CLOSE_TIME = LocalTime.of(21, 30);
+
+    private static boolean isClosed(LocalDateTime now) {
+        DayOfWeek day = now.getDayOfWeek();
+        LocalTime time = now.toLocalTime();
+
+        // Chủ nhật đóng cả ngày
+        // Thứ 7 sau 21:30 đóng
+        // Thứ 2 trước 07:00 đóng
+        return day == DayOfWeek.SUNDAY
+
+                // Thứ 7 sau 21:30 đóng
+                || (day == DayOfWeek.SATURDAY
+                && time.isAfter(CLOSE_TIME))
+
+                // Thứ 2 trước 07:00 đóng
+                || (day == DayOfWeek.MONDAY
+                && time.isBefore(OPEN_TIME));
+    }
+
     @Override
     public OrderResponseDTO getOrderById(String orderId) {
         return null;
@@ -38,6 +60,16 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public OrderResponseDTO addOrder(OrderRequestDTO dto) {
+
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+
+        boolean isClosed = isClosed(now);
+        if (isClosed) {
+            throw new BusinessException(
+                    "Gác Bếp chỉ nhận đơn từ 07:00 T2 đến 21:30 T7"
+            );
+        }
+
         CustomerRequestDTO customerRequestDTO = new CustomerRequestDTO(
                 dto.getPhoneNumber(),
                 dto.getFullName(),
