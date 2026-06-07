@@ -60,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
         boolean isClosed = isClosed(now);
         if (isClosed) {
             throw new BusinessException(
-                    "Gác Bếp chỉ nhận đơn từ 07:00 T2 đến 21:30 T7"
+                    "Gác Bếp chỉ nhận đơn từ 07:00 T2 đến 21:30 CN"
             );
         }
 
