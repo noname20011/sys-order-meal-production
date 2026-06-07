@@ -38,18 +38,12 @@ public class OrderServiceImpl implements OrderService {
         DayOfWeek day = now.getDayOfWeek();
         LocalTime time = now.toLocalTime();
 
-        // Chủ nhật đóng cả ngày
-        // Thứ 7 sau 21:30 đóng
+        // Chủ nhật  sau 21:30 đóng
         // Thứ 2 trước 07:00 đóng
-        return day == DayOfWeek.SUNDAY
-
-                // Thứ 7 sau 21:30 đóng
-                || (day == DayOfWeek.SATURDAY
-                && time.isAfter(CLOSE_TIME))
+        return  (day == DayOfWeek.SUNDAY && time.isAfter(CLOSE_TIME))
 
                 // Thứ 2 trước 07:00 đóng
-                || (day == DayOfWeek.MONDAY
-                && time.isBefore(OPEN_TIME));
+                || (day == DayOfWeek.MONDAY && time.isBefore(OPEN_TIME));
     }
 
     @Override
