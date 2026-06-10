@@ -9,10 +9,10 @@ import java.util.Map;
 @Service
 public class TelegramService {
 
-    @Value("${telegram.bot-token}")
+    @Value("${bot.token.telegram}")
     private String token;
 
-    @Value("${telegram.group-id}")
+    @Value("${group.id.telegram}")
     private String groupId;
 
     private final RestTemplate restTemplate = new RestTemplate();
