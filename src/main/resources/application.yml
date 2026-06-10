@@ -32,5 +32,6 @@ spring:
 server:
   tomcat:
     max-http-form-post-size: 50000000
-fe:
-  url: https://ic-3-production.vercel.app
+telegram:
+  bot-token: 8965455773:AAGEEosRSRfhxZpOmfNgpv72UK5JnzJtxpM
+  group-id: -5217552453

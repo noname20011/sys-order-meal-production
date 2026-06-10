@@ -14,6 +14,7 @@ import sys_order_meal_healthy.exception.BusinessException;
 import sys_order_meal_healthy.listener.SaveOrderEvent;
 import sys_order_meal_healthy.mapper.OrderMapper;
 import sys_order_meal_healthy.repository.OrderRepository;
+import sys_order_meal_healthy.service.TelegramService;
 import sys_order_meal_healthy.service.cloudinary.CloudinaryService;
 import sys_order_meal_healthy.service.customer.CustomerService;
 
@@ -30,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final ApplicationEventPublisher eventPublisher;
+    private final TelegramService telegramService;
 
     private static final LocalTime OPEN_TIME = LocalTime.of(7, 0);
     private static final LocalTime CLOSE_TIME = LocalTime.of(21, 30);
@@ -94,6 +96,27 @@ public class OrderServiceImpl implements OrderService {
         // Spring sẽ giữ Event này lại cho đến khi Transaction thành công
         eventPublisher.publishEvent(new SaveOrderEvent(dto));
 
+        // Send notify about Order to Telegram by bot
+        telegramService.send(
+                """
+                🔔 ĐƠN HÀNG MỚI
+            
+                Mã đơn: %s
+                Khách: %s
+                SĐT: %s
+                Gói đặt: %s
+                Tổng tiền: %s VNĐ
+                Ảnh CK: %s
+                """
+                        .formatted(
+                                customOrderId,
+                                dto.getFullName(),
+                                dto.getPhoneNumber(),
+                                dto.getMealPackage(),
+                                dto.getTotalPrice(),
+                                proofUrlOrMethod
+                        )
+        );
         return orderMapper.mapToResponseDto(orderRaw);
     }
 
