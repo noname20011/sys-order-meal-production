@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import sys_order_meal_healthy.dto.order.OrderRequestDTO;
-import sys_order_meal_healthy.service.cloudinary.CloudinaryService;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -58,11 +57,23 @@ public class GoogleSheetService {
                 formData.getPaymentProofUrl()  // Cột M: Link Ảnh CK (Hoặc hiển thị chữ "COD")
         );
 
+        // 3. Xác định Sheet đích dựa trên thông tin gói ăn (MealPackage)
+        String targetSheet = "WEEKLY!A1"; // Mặc định nếu không thỏa mãn điều kiện tháng
+
+        if (formData.getMealPackage() != null) {
+            String mealPackageStr = formData.getMealPackage().toLowerCase();
+            // Kiểm tra nếu chuỗi chứa từ khóa biểu thị gói Tháng
+            if (mealPackageStr.contains("4 tuần") || mealPackageStr.contains("tháng")) {
+                targetSheet = "MONTHLY!A1";
+            }
+        }
+
+        log.info("Đang đẩy đơn hàng của [{}] vào sheet: {}", formData.getFullName(), targetSheet);
         ValueRange appendBody = new ValueRange().setValues(Collections.singletonList(sheetRowData));
 
         // Tiến hành ghi nối tiếp (append) dữ liệu vào dòng trống tiếp theo dưới tiêu đề Sheet1
         sheetsService.spreadsheets().values()
-                .append(spreadsheetId, "Sheet1!A1", appendBody)
+                .append(spreadsheetId, targetSheet, appendBody)
                 .setValueInputOption("USER_ENTERED")
                 .execute();
     }
