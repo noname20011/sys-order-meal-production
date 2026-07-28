@@ -40,12 +40,12 @@ public class OrderServiceImpl implements OrderService {
         DayOfWeek day = now.getDayOfWeek();
         LocalTime time = now.toLocalTime();
 
-        // Chủ nhật  sau 21:30 đóng
-        // Thứ 2 trước 07:00 đóng
-        return  (day == DayOfWeek.SUNDAY && time.isAfter(CLOSE_TIME))
+        // Thứ 2 sau 21:30 đóng
+        // Thứ 3 trước 07:00 đóng
+        return  (day == DayOfWeek.MONDAY && time.isAfter(CLOSE_TIME))
 
                 // Thứ 2 trước 07:00 đóng
-                || (day == DayOfWeek.MONDAY && time.isBefore(OPEN_TIME));
+                || (day == DayOfWeek.TUESDAY && time.isBefore(OPEN_TIME));
     }
 
     @Override
@@ -62,7 +62,7 @@ public class OrderServiceImpl implements OrderService {
         boolean isClosed = isClosed(now);
         if (isClosed) {
             throw new BusinessException(
-                    "Gác Bếp chỉ nhận đơn từ 07:00 T2 đến 21:30 CN"
+                    "Gác Bếp đang cập nhật menu tuần sau! Hãy quay lại 7h sáng mai."
             );
         }
 
