@@ -1,5 +1,6 @@
 package sys_order_meal_healthy.service;
 
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +36,9 @@ public class GoogleSheetService {
         String formattedMenu = "";
         if (formData.getMetadataOrder() != null) {
             formattedMenu = formData.getMetadataOrder()
-                    .replaceAll("<br/>", "\n")
-                    .replaceAll("<br>", "\n")
-                    .replaceAll("<br />", "\n");
+                    .replace("<br/>", "\n")
+                    .replace("<br>", "\n")
+                    .replace("<br />", "\n");
         }
 
         // Tạo mảng dữ liệu tương ứng 100% với các cột trên hình ảnh (Từ cột A đến cột K)
@@ -72,9 +73,61 @@ public class GoogleSheetService {
         ValueRange appendBody = new ValueRange().setValues(Collections.singletonList(sheetRowData));
 
         // Tiến hành ghi nối tiếp (append) dữ liệu vào dòng trống tiếp theo dưới tiêu đề Sheet1
-        sheetsService.spreadsheets().values()
-                .append(spreadsheetId, targetSheet, appendBody)
-                .setValueInputOption("USER_ENTERED")
-                .execute();
+//        sheetsService.spreadsheets().values()
+//                .append(spreadsheetId, targetSheet, appendBody)
+//                .setValueInputOption("USER_ENTERED")
+//                .execute();
+        // 4. Retry Google Sheets API
+        int maxRetries = 5;
+
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
+
+            try {
+
+                sheetsService.spreadsheets().values()
+                        .append(spreadsheetId, targetSheet, appendBody)
+                        .setValueInputOption("USER_ENTERED")
+                        .execute();
+
+                log.info("✅ Đã ghi đơn hàng [{}] vào {}", formData.getFullName(), targetSheet);
+                return;
+
+            } catch (GoogleJsonResponseException e) {
+
+                int statusCode = e.getStatusCode();
+
+                // Chỉ retry những lỗi có khả năng tạm thời
+                boolean retryable =
+                        statusCode == 429 ||
+                                statusCode == 500 ||
+                                statusCode == 502 ||
+                                statusCode == 503 ||
+                                statusCode == 504;
+
+                if (!retryable) {
+                    log.error("❌ Google Sheets trả về lỗi {} khi ghi đơn [{}]", statusCode, formData.getFullName(), e);
+                    throw e;
+                }
+
+                if (attempt == maxRetries) {
+                    log.error("❌ Không thể ghi đơn [{}] vào {} sau {} lần thử", formData.getFullName(), targetSheet, maxRetries, e);
+                    throw e;
+                }
+
+                // Exponential backoff:
+                // 2s -> 4s -> 8s -> 16s
+                long delay = (long) Math.pow(2, attempt) * 1000;
+
+                log.warn(
+                        "⚠️ Google Sheets lỗi {}. Retry {}/{} sau {} ms. Order: [{}]",
+                        statusCode, attempt, maxRetries, delay, formData.getFullName());
+                try {
+                    Thread.sleep(delay);
+                } catch (InterruptedException interruptedException) {
+                    Thread.currentThread().interrupt();
+                    throw new IOException("Thread bị interrupt trong quá trình retry Google Sheets", interruptedException);
+                }
+            }
+        }
     }
 }
