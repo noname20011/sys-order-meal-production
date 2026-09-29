@@ -34,7 +34,7 @@ public class OrderServiceImpl implements OrderService {
     private final TelegramService telegramService;
 
     private static final LocalTime OPEN_TIME = LocalTime.of(7, 0);
-    private static final LocalTime CLOSE_TIME = LocalTime.of(12, 0);
+    private static final LocalTime CLOSE_TIME = LocalTime.of(23, 30);
 //    21h30
     private static boolean isClosed(LocalDateTime now) {
         DayOfWeek day = now.getDayOfWeek();
@@ -42,10 +42,10 @@ public class OrderServiceImpl implements OrderService {
 
         // Thứ 2 sau 21:30 đóng
         // Thứ 3 trước 07:00 đóng
-        return  (day == DayOfWeek.WEDNESDAY && time.isAfter(CLOSE_TIME))
+        return  (day == DayOfWeek.MONDAY && time.isAfter(CLOSE_TIME))
 
                 // Thứ 2 trước 07:00 đóng
-                || (day == DayOfWeek.THURSDAY && time.isBefore(OPEN_TIME));
+                || (day == DayOfWeek.TUESDAY && time.isBefore(OPEN_TIME));
     }
 
     @Override
