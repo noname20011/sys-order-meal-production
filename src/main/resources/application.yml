@@ -29,6 +29,9 @@ spring:
     redis:
       port: 6674
       host: localhost
+  discord:
+    webhook:
+      url: ${DISCORD_WEBHOOK_URL}
 server:
   tomcat:
     max-http-form-post-size: 50000000
