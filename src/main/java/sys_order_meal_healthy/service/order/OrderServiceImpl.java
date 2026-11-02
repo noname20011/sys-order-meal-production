@@ -96,27 +96,27 @@ public class OrderServiceImpl implements OrderService {
         // Spring sẽ giữ Event này lại cho đến khi Transaction thành công
         eventPublisher.publishEvent(new SaveOrderEvent(dto));
 
-        // Send notify about Order to Telegram by bot
-        telegramService.send(
-                """
-                🔔 ĐƠN HÀNG MỚI
-            
-                Mã đơn: %s
-                Khách: %s
-                SĐT: %s
-                Gói đặt: %s
-                Tổng tiền: %s VNĐ
-                Ảnh CK: %s
-                """
-                        .formatted(
-                                customOrderId,
-                                dto.getFullName(),
-                                dto.getPhoneNumber(),
-                                dto.getMealPackage(),
-                                dto.getTotalPrice(),
-                                proofUrlOrMethod
-                        )
-        );
+//        // Send notify about Order to Telegram by bot
+//        telegramService.send(
+//                """
+//                🔔 ĐƠN HÀNG MỚI
+//
+//                Mã đơn: %s
+//                Khách: %s
+//                SĐT: %s
+//                Gói đặt: %s
+//                Tổng tiền: %s VNĐ
+//                Ảnh CK: %s
+//                """
+//                        .formatted(
+//                                customOrderId,
+//                                dto.getFullName(),
+//                                dto.getPhoneNumber(),
+//                                dto.getMealPackage(),
+//                                dto.getTotalPrice(),
+//                                proofUrlOrMethod
+//                        )
+//        );
         return orderMapper.mapToResponseDto(orderRaw);
     }
 
