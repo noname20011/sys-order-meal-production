@@ -99,14 +99,14 @@ public class OrderServiceImpl implements OrderService {
         eventPublisher.publishEvent(new SaveOrderEvent(dto));
 
         // 3. Gửi thông báo Discord
-//        discordService.sendOrderNotification(
-//                customOrderId,
-//                dto.getFullName(),
-//                dto.getPhoneNumber(),
-//                dto.getMealPackage(),
-//                dto.getTotalPrice(),
-//                proofUrlOrMethod
-//        ).subscribe();
+        discordService.sendOrderNotification(
+                customOrderId,
+                dto.getFullName(),
+                dto.getPhoneNumber(),
+                dto.getMealPackage(),
+                dto.getTotalPrice(),
+                proofUrlOrMethod
+        ).subscribe();
 //        // Send notify about Order to Telegram by bot
 //        telegramService.send(
 //                """
